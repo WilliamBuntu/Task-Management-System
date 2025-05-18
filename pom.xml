@@ -7,8 +7,20 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>war</packaging>
 
-    <name>A custom project</name>
+    <name>NovaTech Task Management System</name>
     <url>http://www.haoxuer.com</url>
+    <description>A web-based task management system for NovaTech Solutions</description>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+        <javaee.version>8.0</javaee.version>
+        <jstl.version>1.2</jstl.version>
+        <mysql.version>8.0.28</mysql.version>
+    </properties>
+
+
+
 
     <dependencies>
         <dependency>
@@ -17,5 +29,45 @@
             <version>3.8.1</version>
             <scope>test</scope>
         </dependency>
+
+        <!-- Java EE API -->
+        <dependency>
+            <groupId>javax</groupId>
+            <artifactId>javaee-api</artifactId>
+            <version>${javaee.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Servlet API -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>4.0.1</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- JSP API -->
+        <dependency>
+            <groupId>javax.servlet.jsp</groupId>
+            <artifactId>javax.servlet.jsp-api</artifactId>
+            <version>2.3.3</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- JSTL -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>jstl</artifactId>
+            <version>${jstl.version}</version>
+        </dependency>
+
+        <!-- MySQL Connector -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>${mysql.version}</version>
+        </dependency>
+
+
     </dependencies>
 </project>
