@@ -1,5 +1,7 @@
 package novaTech.util;
 
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
@@ -9,10 +11,14 @@ import java.util.Properties;
 
 /**
  * Utility class for managing database connections
+ * Supports both MySQL and PostgreSQL connections
  */
 public class DatabaseUtil {
     private static final String PROPERTIES_FILE = "/db.properties";
     private static final Properties properties;
+    private static final String DB_TYPE_PROPERTY = "dbtype";
+    private static final String DB_TYPE_POSTGRES = "postgresql";
+    private static final String DB_TYPE_MYSQL = "mysql";
 
     // Load database properties
     static {
@@ -29,6 +35,8 @@ public class DatabaseUtil {
         }
     }
 
+
+
     /**
      * Gets a connection to the database
      *
@@ -36,8 +44,16 @@ public class DatabaseUtil {
      * @throws SQLException If a database access error occurs
      */
     public static Connection getConnection() throws SQLException {
+        String dbType = properties.getProperty(DB_TYPE_PROPERTY, DB_TYPE_MYSQL);
+
         try {
-            Class.forName(properties.getProperty("driver"));
+            // Load the appropriate database driver
+            if (DB_TYPE_POSTGRES.equalsIgnoreCase(dbType)) {
+                Class.forName("org.postgresql.Driver");
+            } else {
+                // Default to MySQL driver
+                Class.forName(properties.getProperty("driver", "com.mysql.cj.jdbc.Driver"));
+            }
         } catch (ClassNotFoundException e) {
             throw new SQLException("Database driver not found", e);
         }
@@ -46,7 +62,22 @@ public class DatabaseUtil {
         String user = properties.getProperty("user");
         String password = properties.getProperty("password");
 
-        return DriverManager.getConnection(url, user, password);
+        // Configure additional PostgresSQL connection properties if needed
+        if (DB_TYPE_POSTGRES.equalsIgnoreCase(dbType)) {
+            Properties connectionProps = new Properties();
+            connectionProps.setProperty("user", user);
+            connectionProps.setProperty("password", password);
+
+            // Optional: Add PostgreSQL specific settings
+            connectionProps.setProperty("ssl", properties.getProperty("ssl", "false"));
+            connectionProps.setProperty("sslmode", properties.getProperty("sslmode", "prefer"));
+            connectionProps.setProperty("ApplicationName", properties.getProperty("applicationName", "NovaTechApp"));
+
+            return DriverManager.getConnection(url, connectionProps);
+        } else {
+            // Default MySQL connection approach
+            return DriverManager.getConnection(url, user, password);
+        }
     }
 
     /**
@@ -63,4 +94,6 @@ public class DatabaseUtil {
             }
         }
     }
+
+
 }

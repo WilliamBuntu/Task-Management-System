@@ -1,17 +1,33 @@
 -- Create the database
-CREATE DATABASE IF NOT EXISTS task_management;
-USE task_management;
+CREATE DATABASE Task_management;
+
+
+Use Task_management;
 
 -- Create the tasks table
 CREATE TABLE IF NOT EXISTS tasks (
-                                     id INT AUTO_INCREMENT PRIMARY KEY,
+                                     id SERIAL PRIMARY KEY,
                                      title VARCHAR(100) NOT NULL,
     description TEXT,
     due_date DATE NOT NULL,
     status VARCHAR(20) NOT NULL DEFAULT 'Pending',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
+
+-- Create a function and trigger to automatically update the updated_at timestamp
+CREATE OR REPLACE FUNCTION update_modified_column()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.updated_at = CURRENT_TIMESTAMP;
+RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER update_tasks_modtime
+    BEFORE UPDATE ON tasks
+    FOR EACH ROW
+    EXECUTE FUNCTION update_modified_column();
 
 -- Add some sample data
 INSERT INTO tasks (title, description, due_date, status)
