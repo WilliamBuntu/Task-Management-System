@@ -2,6 +2,7 @@ package novaTech.dao;
 
 import novaTech.model.Task;
 import novaTech.util.DatabaseUtil;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -11,6 +12,8 @@ import java.util.List;
  * Data Access Object for Task-related database operations
  */
 public class TaskDAO {
+
+
 
     /**
      * Inserts a new task into the database
@@ -31,7 +34,7 @@ public class TaskDAO {
             stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             stmt.setString(1, task.getTitle());
             stmt.setString(2, task.getDescription());
-            stmt.setDate(3, new java.sql.Date(task.getDueDate().getTime()));
+            stmt.setDate(3, new Date(task.getDueDate().getTime()));
             stmt.setString(4, task.getStatus());
 
             int affectedRows = stmt.executeUpdate();
@@ -73,7 +76,7 @@ public class TaskDAO {
             stmt = conn.prepareStatement(sql);
             stmt.setString(1, task.getTitle());
             stmt.setString(2, task.getDescription());
-            stmt.setDate(3, new java.sql.Date(task.getDueDate().getTime()));
+            stmt.setDate(3, new Date(task.getDueDate().getTime()));
             stmt.setString(4, task.getStatus());
             stmt.setInt(5, task.getId());
 
@@ -218,4 +221,7 @@ public class TaskDAO {
             DatabaseUtil.closeConnection(conn);
         }
     }
+
+
+
 }

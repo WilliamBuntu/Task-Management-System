@@ -16,7 +16,7 @@ import java.util.Date;
 /**
  * Servlet to handle task creation and updating
  */
-@WebServlet(name = "TaskServlet", urlPatterns = "/task")
+@WebServlet(name = "TaskServlet", urlPatterns = "/tasks")
 public class TaskServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private TaskDAO taskDAO;
@@ -100,7 +100,7 @@ public class TaskServlet extends HttpServlet {
     @Override
     protected void doPut(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Forward to doPost which handles both create and update
+        // Forward to doPost, which handles both create and update
         doPost(request, response);
     }
 }
